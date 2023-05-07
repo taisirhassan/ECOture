@@ -1,6 +1,9 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const fs = require('fs');
+var request = require("request")
+var rp = require('request-promise');
+bodyParser = require('body-parser');
 
 // URL of the website to scrape
 const url = 'https://www2.hm.com/en_ca/productpage.0993840013.html';
@@ -15,6 +18,7 @@ const scrapeName = async () => {
       const $ = cheerio.load(data);
       const name = $('h1').text();
       console.log(name);
+
     } catch (err) {
       console.error(err);
     }
@@ -51,6 +55,26 @@ const scrapeMaterials = async () => {
         });
         // Logs materials array to the console
         console.dir(materials);
+
+        let materialObj = Object.fromEntries(materials);
+        let materialSimp = {};
+        let percent = 0;
+
+        for (const key in materialObj) {
+          percent = percent + parseInt(materialObj[key]);
+          if (percent <= 100) {
+            materialSimp[key] = materialObj[key]
+          }
+        }
+        rp({
+          url: 'http://localhost:5000/todos',
+          method: "GET",
+          body: materialSimp,
+          json: true,
+        }).then(function (parsedBody) {
+          console.log("The score is: " + parsedBody);
+          // POST succeeded...
+      })
     } catch (err) {
       console.error(err);
     }
@@ -86,4 +110,18 @@ const downloadImage = async (imageUrl, imageName) => {
   }
 };
 
+/*
+fetch('http://localhost:5000/todos', {
+   headers: {
+      'Accept': 'application/json'
+   }
+})
+   .then(response => response.text())
+   .then(text => console.log(text))
+*/
+
+var propertiesObject = { field1:'test1', field2:'test2' };
+
 scrapeName();
+scrapeMaterials();
+
