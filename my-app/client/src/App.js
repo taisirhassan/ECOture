@@ -1,5 +1,5 @@
 import "./App.css";
-import Landing from "./components/Landing";
+import Landing from "./pages/Landing";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
