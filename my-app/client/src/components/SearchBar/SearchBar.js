@@ -12,7 +12,7 @@ const SearchBar = () => {
   //const [search, setSearch] = useState(false);
 
   const onChange = event => {
-    setItemUrl(event.target.value);
+    setItemUrl("https://www2.hm.com/en_ca/productpage.0993840013.html");
   }
 
   const onSearch = async () => {
@@ -29,7 +29,7 @@ const SearchBar = () => {
   const materials = new Map();
   materials.set("cotton", 25);
   materials.set("polyester", 30);
-    
+
   return (
     <div className="page">
       <div className="search-container">

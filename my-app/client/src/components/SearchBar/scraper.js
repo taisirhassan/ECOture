@@ -18,10 +18,6 @@ export const scrapeName =  async (url) => {
     console.log(url);
       // Fetch HTML of the page we want to scrape
       let data = await axios.get(url=url,config=config);
-      // const $ = cheerio.load(data); 
-      // const html = (await (await fetch(url)).text()); // html as text
-      // const doc = new DOMParser().parseFromString(html, 'text/html');
-      // const name = doc.querySelector('h1');
       // Load HTML we fetched in the previous line
       let $ = cheerio.load(data);
       let name = $('h1').text();
@@ -80,6 +76,7 @@ export const scrapeMaterials = async (url) => {
           json: true,
         }).then(function (parsedBody) {
           console.log("The score is: " + parsedBody);
+          module.exports = {parsedBody};
           // POST succeeded...
       })
     } catch (err) {
@@ -105,16 +102,3 @@ export const scrapeImage = async (url) => {
       console.error(err);
     }
 }
-
-
-// Function to download an image given its URL
-// const downloadImage = (imageUrl, imageName) => {
-//   try {
-//     const response = axios.get(imageUrl, {responseType: 'stream'});
-//     const writer = fs.createWriteStream(imageName + '.png');
-//     response.data.pipe(writer);
-//     console.log(`Downloaded: ${imageName}`);
-//   } catch (error) {
-//     console.error(`Error downloading ${imageName}:`, error);
-//   }
-// };

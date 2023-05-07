@@ -1,4 +1,5 @@
 import React from "react";
+//import parsedBody from "../SearchBar/scraper.js"
 
 const ProductCard = (props) => {
   return (
@@ -13,7 +14,7 @@ const ProductCard = (props) => {
           {key}: {value}%
         </li>
       ))}
-      <p className="score">{}</p>
+      {/* <p className="score">{parsedBody}</p> */}
       </div>
     </div>
   );
