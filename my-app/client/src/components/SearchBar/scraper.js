@@ -1,16 +1,18 @@
 import axios from "axios"
 import * as cheerio from 'cheerio';
+import rp from "rp";
 
 // URL of the website to scrape
 //const url = 'https://www2.hm.com/en_ca/productpage.0993840013.html';
 
-const keywords = ['Cotton', 'Polyester', 'Linen', 'Viscose', 'Elastane'];
+const keywords = ['Cotton', 'Polyester', 'Linen', 'Viscose', 'Wool'];
 const config = {
   header: {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin" : "*"
   },
 };
+
 export const scrapeName =  async (url) => {
   try {
     console.log(url);
@@ -60,6 +62,26 @@ export const scrapeMaterials = async (url) => {
         });
         // Logs materials array to the console
         console.dir(materials);
+
+        let materialObj = Object.fromEntries(materials);
+        let materialSimp = {};
+        let percent = 0;
+
+        for (const key in materialObj) {
+          percent = percent + parseInt(materialObj[key]);
+          if (percent <= 100) {
+            materialSimp[key] = materialObj[key]
+          }
+        }
+        rp({
+          url: 'http://localhost:5000/todos',
+          method: "GET",
+          body: materialSimp,
+          json: true,
+        }).then(function (parsedBody) {
+          console.log("The score is: " + parsedBody);
+          // POST succeeded...
+      })
     } catch (err) {
       console.error(err);
     }

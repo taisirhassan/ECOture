@@ -2,6 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 5%;
 }
 
 .search-input {
@@ -24,4 +25,8 @@
 
 .search-button:hover {
   background-color: #0062cc;
+}
+
+.search-output {
+  margin: 10%;
 }
