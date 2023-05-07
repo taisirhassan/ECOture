@@ -2,8 +2,11 @@ import "./About.css";
 function About() {
   return (
     <div class="about-page">
-      <h1>About Page</h1>
-      <p>This is the about page</p>
+      <h1>Consume smarter: Save the planet in style</h1>
+      <p>
+        Our goal at ECOuture is to help you make eco-consious decisions when
+        buying clothes.
+      </p>
     </div>
   );
 }

@@ -2,7 +2,7 @@ import "./Header.css";
 function Header() {
   return (
     <header>
-      <h1> Fashion Website!</h1>
+      <h1>ECOuture</h1>
     </header>
   );
 }
