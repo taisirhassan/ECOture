@@ -9,8 +9,8 @@ function App() {
     <div>
       <Header />
       <About />
-
       <SearchBar />
+      <Menu />
     </div>
   );
 }

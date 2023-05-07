@@ -1,12 +1,13 @@
 import React from "react";
-import ProductCard from "./ProductCard";
+import "./Menu.css";
+import ProductCard from "../ProductCard/ProductCard";
 
-const Menu = ({ products }) => {
+const Menu = ({ props }) => {
   return (
     <div className="menu">
-      {products.map((product) => (
-        <ProductCard key={product.id} product={product} />
-      ))}
+      <ProductCard key={props} product={props} />
+      <ProductCard />
+      <ProductCard />
     </div>
   );
 };
