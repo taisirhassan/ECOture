@@ -1,15 +1,14 @@
 import "./App.css";
-import About from "./components/About/About";
-import Header from "./components/Header/Header";
-import TryButton from "./components/TryButton/TryButton";
+import Landing from "./components/Landing";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    <div>
-      <Header />
-      <About />
-      <TryButton/>
-    </div>
+    <Router>
+      <Routes>
+        <Route exact path="/" element={<Landing />} />
+      </Routes>
+    </Router>
   );
 }
 
