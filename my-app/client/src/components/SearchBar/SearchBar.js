@@ -2,33 +2,32 @@ import React, {useState} from "react";
 import { scrapeName, scrapeImage, scrapeMaterials} from "./scraper.js";
 import "./SearchBar.css";
 import ProductCard from "../ProductCard/ProductCard.js";
+import axios from "axios";
 
 const SearchBar = () => {
   const [itemUrl, setItemUrl] = useState('');
   const [name, setName] = useState('');
   const [image, setImage] = useState('');
-  //const [materials, setMaterials] = useState({});
-
-  //const [search, setSearch] = useState(false);
+  const [materials, setMaterials] = useState({});
+  const [search, isSearch] = useState(false);
 
   const onChange = event => {
-    setItemUrl("https://www2.hm.com/en_ca/productpage.0993840013.html");
+    setItemUrl(event.target.value);
   }
+
+  const config = {
+    header: {
+      "Access-Control-Allow-Origin" : "*"
+    },
+  };
 
   const onSearch = async () => {
-    console.log(itemUrl)
-    let name = await scrapeName(itemUrl);
-    setName(name);
-    /*let image = await scrapeImage(itemUrl);
-    setImage(image);
-    let materials = await scrapeMaterials(itemUrl);
-    setMaterials(materials);*/
+    let {data} = await axios.get(`http://127.0.0.1:5000/scrape?url=${itemUrl}`, config);
+    setName(data.name);
+    setImage(data.image);
+    setMaterials(data.materials);
+    isSearch(true);
   }
-
-  //testing
-  const materials = new Map();
-  materials.set("cotton", 25);
-  materials.set("polyester", 30);
 
   return (
     <div className="page">
@@ -44,13 +43,14 @@ const SearchBar = () => {
         </button>
       </div>
       <div className="search-output">
+        {/* Check if isSearch is true */}
         <ProductCard
           name={name}
           image={image}
           materials={materials}
         ></ProductCard>
       </div>
-    </div>
+  </div>
   );
 }
 

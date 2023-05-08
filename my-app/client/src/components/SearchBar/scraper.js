@@ -1,6 +1,13 @@
 import axios from "axios"
 import * as cheerio from 'cheerio';
-import rp from "rp";
+//import rp from "request-promise";
+
+let obj = {
+  "materials" : new Map(),
+  "score": 0.0
+}
+
+export {obj};
 
 // URL of the website to scrape
 //const url = 'https://www2.hm.com/en_ca/productpage.0993840013.html';
@@ -8,7 +15,6 @@ import rp from "rp";
 const keywords = ['Cotton', 'Polyester', 'Linen', 'Viscose', 'Wool'];
 const config = {
   header: {
-    "Content-Type": "application/json",
     "Access-Control-Allow-Origin" : "*"
   },
 };
@@ -17,7 +23,8 @@ export const scrapeName =  async (url) => {
   try {
     console.log(url);
       // Fetch HTML of the page we want to scrape
-      let data = await axios.get(url=url,config=config);
+      let data = await axios.get(url,config);
+      console.log(data)
       // Load HTML we fetched in the previous line
       let $ = cheerio.load(data);
       let name = $('h1').text();
@@ -69,16 +76,16 @@ export const scrapeMaterials = async (url) => {
             materialSimp[key] = materialObj[key]
           }
         }
-        rp({
+        /*rp({
           url: 'http://localhost:5000/todos',
           method: "GET",
           body: materialSimp,
           json: true,
         }).then(function (parsedBody) {
           console.log("The score is: " + parsedBody);
-          module.exports = {parsedBody};
+          obj.parsedBody = parsedBody
           // POST succeeded...
-      })
+      })*/
     } catch (err) {
       console.error(err);
     }

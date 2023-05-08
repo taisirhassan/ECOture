@@ -1,127 +1,112 @@
-const axios = require('axios');
-const cheerio = require('cheerio');
-const fs = require('fs');
-var request = require("request")
-var rp = require('request-promise');
-bodyParser = require('body-parser');
+const axios = require("axios")
+const cheerio = require("cheerio")
+const { MongoClient } = require("mongodb");
 
-// URL of the website to scrape
-const url = 'https://www2.hm.com/en_ca/productpage.0993840013.html';
+const uri = "mongodb+srv://Danny:kuGQ8J04owk8XidB@cluster0.yhcwz4g.mongodb.net/?retryWrites=true&w=majority";
+const client = new MongoClient(uri);
 
-const keywords = ['Cotton', 'Polyester', 'Linen', 'Viscose', 'Elastane'];
-
-const scrapeName = async () => {
+const keywords = ['Cotton', 'Polyester', 'Linen', 'Viscose', 'Wool']; // Clothing materials to extract
+const config = {
+  header: {
+    "Access-Control-Allow-Origin": "*"
+  },
+};
+const scrapeName = async (url) => {
   try {
-      // Fetch HTML of the page we want to scrape
-      const {data} = await axios.get(url);
-      // Load HTML we fetched in the previous line
-      const $ = cheerio.load(data);
-      const name = $('h1').text();
-      console.log(name);
-
-    } catch (err) {
-      console.error(err);
-    }
+    // Fetch HTML of the page we want to scrape
+    let {data} = await axios.get(url, config);
+    // Load HTML fetched in the previous line
+    let $ = cheerio.load(data);
+    // Select all the list items in the h1 class
+    let name = $('h1').text();
+    return name;
+  } catch (err) {
+    console.error(err);
+  }
 }
-
-const scrapeMaterials = async () => {
-    try {
-        // Fetch HTML of the page we want to scrape
-        const {data} = await axios.get(url);
-        // Load HTML we fetched in the previous line
-        const $ = cheerio.load(data);
-        // Select all the list items in plainlist class
-        const materialElements = $('dd');
-        // Stores data for all countries
-        var materials = new Map();
-        // Use .each method to loop through the li we selected
-        materialElements.each((index, element) => {
-            // Object holding data for each country/jurisdiction
-            const text = $(element).text();
-            keywords.forEach((keyword) => {
-                if (text.includes(keyword)) {
-                  // Extract percentage of material
-                    var percent = "";
-                    const index = text.lastIndexOf(keyword);
-                    if (index !== -1) {
-                      percent = text.substring(index+keyword.length+1, index+keyword.length+4).replace("%", "");
-                    }
-                    if (percent != "") {
-                      // Populate materials array with material data
-                      materials.set(keyword, percent);
-                    }
-                }
-            });
-        });
-        // Logs materials array to the console
-        console.dir(materials);
-
-        let materialObj = Object.fromEntries(materials);
-        let materialSimp = {};
-        let percent = 0;
-
-        for (const key in materialObj) {
-          percent = percent + parseInt(materialObj[key]);
-          if (percent <= 100) {
-            materialSimp[key] = materialObj[key]
+const scrapeMaterials = async (url) => {
+  try {
+    let {data} = await axios.get(url, config);
+    const $ = cheerio.load(data);
+    const materialElements = $('dd');
+    // Stores data for all materials
+    let materials = new Map();
+    materialElements.each((index, element) => {
+      let text = $(element).text();
+      keywords.forEach((keyword) => {
+        if (text.includes(keyword)) {
+          // Extract percentage of material
+          let percent = "";
+          const index = text.lastIndexOf(keyword);
+          if (index !== -1) {
+            percent = text.substring(index + keyword.length + 1, index + keyword.length + 4).replace("%", "");
+          }
+          if (percent !== "") {
+            // Populate materials dictionary
+            materials.set(keyword, percent);
           }
         }
-        rp({
-          url: 'http://localhost:5000/todos',
-          method: "GET",
-          body: materialSimp,
-          json: true,
-        }).then(function (parsedBody) {
-          console.log("The score is: " + parsedBody);
-          // POST succeeded...
-      })
-    } catch (err) {
-      console.error(err);
-    }
-}
+      });
+    });
 
-const scrapeImage = async () => {
-    try {
-        const {data} = await axios.get(url);
-        const $ = cheerio.load(data);
-        var imageUrl = "";
-          const imageElements = $('img');
-          imageElements.each((index, element) => {
-            const imageSrc = $(element).attr('src');
-            if (imageSrc.includes('hm.com')) {
-              imageUrl = imageSrc;
+    let materialObj = Object.fromEntries(materials);
+    let materialSimp = {};
+    let percent = 0;
+
+    for (const key in materialObj) {
+      percent = percent + parseInt(materialObj[key]);
+      if (percent <= 100) {
+        materialSimp[key] = materialObj[key]
+      }
+    }
+    let score = 0.76 + 1 + 0.28;
+    async function run() {
+      try {
+        const db = client.db('db');
+        const coll = db.collection('Materials');
+        const query = coll.find({});
+
+        for (const key in materialSimp) {
+          await query.forEach(function (materials) {
+            if (materials.name === key) {
+              score = score + materials.score * (parseInt(materialSimp[key]) / 100);
             }
           });
-          downloadImage(imageUrl, "test");
-    } catch (err) {
-      console.error(err);
+        };
+
+      } finally {
+        // Ensures that the client will close when you finish/error
+        await client.close();
+        return {score: score, materials: materials};
+      }
     }
+    // run().catch(console.dir);
+    return await run();
+  } catch (err) {
+  console.error(err);
+}
 }
 
-// Function to download an image given its URL
-const downloadImage = async (imageUrl, imageName) => {
+const scrapeImage = async (url) => {
   try {
-    const response = await axios.get(imageUrl, {responseType: 'stream'});
-    const writer = fs.createWriteStream(imageName + '.png');
-    response.data.pipe(writer);
-    console.log(`Downloaded: ${imageName}`);
-  } catch (error) {
-    console.error(`Error downloading ${imageName}:`, error);
+    let {data} = await axios.get(url, config);
+    const $ = cheerio.load(data);
+    let imageUrl = "";
+    const imageElements = $('img');
+    imageElements.each((index, element) => {
+      let imageSrc = $(element).attr('src');
+      if (imageSrc.includes('hm.com')) {
+        imageUrl = imageSrc;
+      }
+    });
+    return imageUrl;
+  } catch (err) {
+    console.error(err);
   }
-};
+}
 
-/*
-fetch('http://localhost:5000/todos', {
-   headers: {
-      'Accept': 'application/json'
-   }
-})
-   .then(response => response.text())
-   .then(text => console.log(text))
-*/
-
-var propertiesObject = { field1:'test1', field2:'test2' };
-
-scrapeName();
-scrapeMaterials();
-
+module.exports = {
+  scrapeImage,
+  scrapeMaterials,
+  scrapeName
+}
