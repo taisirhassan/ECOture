@@ -1,70 +1,29 @@
-# Getting Started with Create React App
+# ECOture - created for DeerHacks2023!
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 💡 Inspiration:
+We were inspired by a video highlighting the impact that fast fashion has on the environment. While watching this video, we realized that knowledge surrounding the environmental impact clothing is very inaccessible for consumers. We decided that we wanted to develop a online tool that would spread awareness of this issue and facilitate more eco-conscious purchasing decisions.
 
-## Available Scripts
+## 🤖 What it does
+On ECOuture, you're able to provide a URL for a product listing that you are interesting in buying. Once the URL is entered, we scrape the listing for information that is used to identify the product (name of product, manufacturer and materials used). Once we've received the information about the product, we reference a database that contains values that measure environmental impact based on the material and manufacturer provided. These values include: Material Score, Sustainability Certifications, Supply Chain Transparency and Geographical Location. The values are then plugged into a formula to determine a score that grades the eco-friendliness of the given product (Higher number = more eco-friendly).
 
-In the project directory, you can run:
+## 🧠 How we built it:
+For our front-end, we used React.js to design our webpages and CSS to stylize them. For our backend, we used Node.JS and Express.JS, along with Axios and Cheerio as libraries for our web scrapper. For our database, we used MongoDB to host our data. To determine what values we should designate to what manufacturer and material, we referenced academic articles and publicly available indexes that provided insight on the materials' environmental impact and companies' production practices. Our formula is given by:
 
-### `npm start`
+Eco-friendliness score = (T + C + G) * M
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+T = Supply Chain Transparency
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+C = Sustainability Certifications
 
-### `npm test`
+G = Geographical Location
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+M = Material Score
 
-### `npm run build`
+## 😎 Accomplishments that we're proud of
+One thing that we're proud of is that we were able to implement web scraping into our project, something that is very much outside of our comfort zone.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🥸 What we learned
+We learned more about how to incorporate front-end elements, back-end elements, and databases together. Additionally, we learned a lot about how eco-friendly certain companies' production practices are and the environmental impact of materials relative to one another.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 🥳 What's next for ECOuture
+We plan on expanding the number of product listing URLs compatible with our website. We also would like to develop a more expansive databases, covering more materials and manufacturers. Something to consider would be a revamped eco-friendly formula, as our current formula is quite basic and could be adjusted to give a more comprehensive eco-friendliness score.build dependency from your project.
