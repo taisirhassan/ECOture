@@ -5,15 +5,12 @@ import ProductCard from "../ProductCard/ProductCard.js";
 import axios from "axios";
 
 const SearchBar = () => {
+  // itemUrl here can't be changed since it's const, change by using the setItemUrl()
   const [itemUrl, setItemUrl] = useState('');
   const [name, setName] = useState('');
   const [image, setImage] = useState('');
   const [materials, setMaterials] = useState({});
   const [search, isSearch] = useState(false);
-
-  const onChange = event => {
-    setItemUrl(event.target.value);
-  }
 
   const config = {
     header: {
@@ -22,6 +19,7 @@ const SearchBar = () => {
   };
 
   const onSearch = async () => {
+    // server.js listens for any url with local server ip(127.0.0.1), port 5000, and /scrape extension
     let {data} = await axios.get(`http://127.0.0.1:5000/scrape?url=${itemUrl}`, config);
     setName(data.name);
     setImage(data.image);
@@ -35,7 +33,8 @@ const SearchBar = () => {
         <input
           type="text"
           placeholder="Search..."
-          onChange={onChange}
+          // onChange fires everytime you enter a key on your keyboard
+          onChange={event => setItemUrl(event.target.value)}
           className="search-input"
         />
         <button className="search-button" onClick={onSearch}>

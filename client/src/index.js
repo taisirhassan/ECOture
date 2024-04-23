@@ -4,6 +4,9 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
+//StrictMode is a React Developer Tool primarily used for highlighting possible problems in a 
+// web application. It activates additional deprecation checks and warnings for its child components.
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
